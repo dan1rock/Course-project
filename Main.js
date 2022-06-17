@@ -108,7 +108,7 @@ const explosion = (x, y, radius, maxScale, particleCount) => {
         allParticles.push(new Particles(
             spawnX, 
             spawnY, 
-            Math.random() * (maxScale - 0.2) + 0.2, 
+            Math.random() * (maxScale / 2) + maxScale / 2, 
             allParticles.length, 
             greyParticles, 
             calculateAngle(x, y, spawnX, spawnY, false) + toRadians(90), 

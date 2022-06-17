@@ -29,6 +29,7 @@ class Bullet {
     }
 
     destroy() {
+        explosion(getCenterX(this.x, bullet, 0.1), getCenterY(this.y, bullet, 0.1), 3, 0.1, 5);
         bullets.splice(this.index, 1);
         bulletDestroyed(this.index);
     }
@@ -91,7 +92,7 @@ class Enemy {
             this.angle, 
             getCenterX(this.x, player, 0.4), 
             getCenterY(this.y, player, 0.4), 
-            2, bullets.length, true))
+            1, bullets.length, true))
             this.shootDelay = Math.random() * 20 + 10;
         }
 
