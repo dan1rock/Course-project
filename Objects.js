@@ -35,9 +35,6 @@ class Bullet {
     changeIndex() {
         this.index -= 1;
     }
-
-    getX() { return this.x }
-    getY() { return this.y }
 }
 
 class Particles {
@@ -93,7 +90,7 @@ class Enemy {
         for(let i = 0; i < bullets.length; ++i){
             const centerX = getCenterX(this.x, player, 0.4);
             const centerY = getCenterY(this.y, player, 0.4);
-            if(Math.sqrt(Math.pow(bullets[i].getX() - centerX, 2) + Math.pow(bullets[i].getY() - centerY, 2)) < 20){
+            if(Math.sqrt(Math.pow(bullets[i].x - centerX, 2) + Math.pow(bullets[i].y - centerY, 2)) < 20){
                 explosion(centerX, centerY, 10, 0.5, 15);
                 enemies.splice(this.index, 1);
                 enemyDestroyed(this.index);
