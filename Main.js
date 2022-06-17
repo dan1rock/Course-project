@@ -39,6 +39,10 @@ function keyDown(event){
         calculateAngle(xPos, yPos, mousePos.X, mousePos.Y) + toRadians(90), 
         getCenterX(xPos, player, 0.4), getCenterY(yPos, player, 0.4), 2, bullets.length)
         )
+    if(event.code == 'KeyQ') {
+        playerSpeed *= 5;
+        setTimeout(resetPlayerSpeed, 50);
+    }
 }
 
 function keyUp(event){
@@ -114,6 +118,10 @@ const explosion = (x, y, radius, maxScale, particleCount) => {
             calculateAngle(x, y, spawnX, spawnY, false) + toRadians(90), 
             Math.random() * 0.2, 0));
     }
+}
+
+const resetPlayerSpeed = () => {
+    playerSpeed = 0.5;
 }
 
 const getCenterX = (x, img, scale) => { return x + img.width * scale / 2; }
