@@ -1,13 +1,14 @@
 'use strict';
 
 class Bullet {
-    constructor(angle, x, y, speed, index) {
+    constructor(angle, x, y, speed, index, isEnemy = false) {
         this.x = x;
         this.y = y;
         this.angle = angle;
         this.speed = speed;
         this.index = index;
         this.timer = 0;
+        this.isEnemy = isEnemy;
     }
 
     bulletMain() {
@@ -75,6 +76,7 @@ class Enemy {
         this.angle = 0;
         this.speed = speed;
         this.index = index;
+        this.shootDelay = Math.random() * 20 + 10;
     }
 
     enemyMain() {
@@ -82,6 +84,16 @@ class Enemy {
         drawImage(ctx, player, this.x, this.y, this.angle, 0.4);
         this.x += this.speed * Math.cos(this.angle);
         this.y += this.speed * Math.sin(this.angle);
+        this.shootDelay -= 0.1;
+
+        if(this.shootDelay <= 0) {
+            bullets.push(new Bullet(
+            this.angle, 
+            getCenterX(this.x, player, 0.4), 
+            getCenterY(this.y, player, 0.4), 
+            2, bullets.length, true))
+            this.shootDelay = Math.random() * 20 + 10;
+        }
 
         this.detectCollision();
     }
@@ -90,7 +102,7 @@ class Enemy {
         for(let i = 0; i < bullets.length; ++i){
             const centerX = getCenterX(this.x, player, 0.4);
             const centerY = getCenterY(this.y, player, 0.4);
-            if(Math.sqrt(Math.pow(bullets[i].x - centerX, 2) + Math.pow(bullets[i].y - centerY, 2)) < 20){
+            if(Math.sqrt(Math.pow(bullets[i].x - centerX, 2) + Math.pow(bullets[i].y - centerY, 2)) < 20 && !bullets[i].isEnemy){
                 explosion(centerX, centerY, 10, 0.5, 15);
                 enemies.splice(this.index, 1);
                 enemyDestroyed(this.index);
