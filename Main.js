@@ -7,11 +7,13 @@ const background = new Image();
 const player = new Image(); 
 const bullet = new Image();
 const particles = new Image();
+const greyParticles = new Image();
 
 background.src = 'Textures/Floor.png';
 player.src = 'Textures/Character.png';
 bullet.src = 'Textures/bullet.png';
 particles.src = 'Textures/WhiteParticles.png';
+greyParticles.src = 'Textures/GreyParticles.png';
 
 const key = {
     up: false,
@@ -97,6 +99,21 @@ const spawnEnemy = () => {
             enemies.push(new Enemy(Math.random() * 500, 520, 0.2, enemies.length));
             break;
     } 
+}
+
+const explosion = (x, y, radius, maxScale, particleCount) => {
+    for(let i = 0; i < particleCount; ++i){
+        const spawnX = x + Math.random() * radius * 2 - radius;
+        const spawnY = y + Math.random() * radius * 2 - radius;
+        allParticles.push(new Particles(
+            spawnX, 
+            spawnY, 
+            Math.random() * (maxScale - 0.2) + 0.2, 
+            allParticles.length, 
+            greyParticles, 
+            calculateAngle(x, y, spawnX, spawnY, false) + toRadians(90), 
+            Math.random() * 0.2, 0));
+    }
 }
 
 const getCenterX = (x, img, scale) => { return x + img.width * scale / 2; }

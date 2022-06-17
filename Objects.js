@@ -20,7 +20,7 @@ class Bullet {
         }
 
         if(this.timer <= 0) {
-            allParticles.push(new Particles(getCenterX(this.x, bullet, 0.1), getCenterY(this.y, bullet, 0.1), 0.1, allParticles.length));
+            allParticles.push(new Particles(getCenterX(this.x, bullet, 0.1), getCenterY(this.y, bullet, 0.1), 0.1, allParticles.length, particles));
             this.timer = 1;
         }
 
@@ -41,18 +41,24 @@ class Bullet {
 }
 
 class Particles {
-    constructor(x, y, scale, index) {
+    constructor(x, y, scale, index, img, angle = 0, speed = 0, spawnTimer = 0.8) {
         this.scale = scale;
         this.x = x;
         this.y = y;
-        this.spawnTimer = 0.8;
+        this.spawnTimer = spawnTimer;
         this.index = index;
+        this.img = img;
+        this.speed = speed;
+        this.angle = angle;
     }
 
     particlesMain() {
-        if(this.spawnTimer < 0) drawImage(ctx, particles, this.x, this.y, 0, this.scale);
+        if(this.spawnTimer < 0) drawImage(ctx, this.img, this.x, this.y, 0, this.scale);
+        else this.spawnTimer -= 0.2;
         this.scale -= 0.002;
-        this.spawnTimer -= 0.2;
+
+        this.x += this.speed * Math.cos(this.angle);
+        this.y += this.speed * Math.sin(this.angle);
         
         if(this.scale <= 0){
             allParticles.splice(this.index, 1);
@@ -88,6 +94,7 @@ class Enemy {
             const centerX = getCenterX(this.x, player, 0.4);
             const centerY = getCenterY(this.y, player, 0.4);
             if(Math.sqrt(Math.pow(bullets[i].getX() - centerX, 2) + Math.pow(bullets[i].getY() - centerY, 2)) < 20){
+                explosion(centerX, centerY, 10, 0.5, 15);
                 enemies.splice(this.index, 1);
                 enemyDestroyed(this.index);
                 bullets[i].destroy();
