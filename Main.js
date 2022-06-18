@@ -66,16 +66,8 @@ document.onmousemove = function(event) {
     mousePos.Y = event.pageY;
 }
 
-const bulletDestroyed = (index) => {
-    for(let i = index; i < bullets.length; ++i) bullets[i].changeIndex();
-}
-
-const particleDestroyed = (index) => {
-    for(let i = index; i < allParticles.length; ++i) allParticles[i].changeIndex();
-}
-
-const enemyDestroyed = (index) => {
-    for(let i = index; i < enemies.length; ++i) enemies[i].changeIndex();
+const objectDestroyed = (index, objectArray) => {
+    for(let i = index; i < objectArray.length; ++i) objectArray[i].index -= 1;
 }
 
 const calculateAngle = (x1, y1, x2, y2, cursor = true) => { 
@@ -127,7 +119,7 @@ const resetPlayerSpeed = () => {
 const getCenterX = (x, img, scale) => { return x + img.width * scale / 2; }
 const getCenterY = (y, img, scale) => { return y + img.height * scale / 2; }
 
-const toRadians = (angle) => { return angle * (Math.PI/180) }
+const toRadians = (angle) => { return angle * (Math.PI / 180) }
 
 let xPos = 250;
 let yPos = 250;

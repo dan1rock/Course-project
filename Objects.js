@@ -31,11 +31,7 @@ class Bullet {
     destroy() {
         explosion(getCenterX(this.x, bullet, 0.1), getCenterY(this.y, bullet, 0.1), 3, 0.1, 5);
         bullets.splice(this.index, 1);
-        bulletDestroyed(this.index);
-    }
-
-    changeIndex() {
-        this.index -= 1;
+        objectDestroyed(this.index, bullets);
     }
 }
 
@@ -61,12 +57,8 @@ class Particles {
         
         if(this.scale <= 0){
             allParticles.splice(this.index, 1);
-            particleDestroyed(this.index);
+            objectDestroyed(this.index, allParticles);
         }
-    }
-
-    changeIndex() {
-        this.index -= 1;
     }
 }
 
@@ -106,13 +98,9 @@ class Enemy {
             if(Math.sqrt(Math.pow(bullets[i].x - centerX, 2) + Math.pow(bullets[i].y - centerY, 2)) < 20 && !bullets[i].isEnemy){
                 explosion(centerX, centerY, 10, 0.5, 15);
                 enemies.splice(this.index, 1);
-                enemyDestroyed(this.index);
+                objectDestroyed(this.index, enemies);
                 bullets[i].destroy();
             }
         }
-    }
-
-    changeIndex() {
-        this.index -= 1;
     }
 }
