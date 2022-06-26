@@ -3,6 +3,14 @@
 const cvs = document.getElementById('canvas');
 const ctx = cvs.getContext('2d');
 
+cvs.width = window.innerWidth;
+cvs.height = window.innerHeight;
+
+const canvas = {
+    width: cvs.width,
+    height: cvs.height
+}
+
 const background = new Image();
 const player = new Image(); 
 const bullet = new Image();
@@ -81,10 +89,10 @@ const calculateAngle = (x1, y1, x2, y2, cursor = true) => {
 
 const spawnEnemy = () => {
     const side = Math.floor(Math.random() * 4); 
-    if(side == 0) enemies.push(new Enemy(-50, Math.random() * 500, 0.2, enemies.length));
-    else if(side == 1) enemies.push(new Enemy(520, Math.random() * 500, 0.2, enemies.length));
-    else if(side == 2) enemies.push(new Enemy(Math.random() * 500, -50, 0.2, enemies.length));
-    else if(side == 3) enemies.push(new Enemy(Math.random() * 500, 520, 0.2, enemies.length));
+    if(side == 0) enemies.push(new Enemy(-50, Math.random() * canvas.height, 0.2, enemies.length));
+    else if(side == 1) enemies.push(new Enemy(canvas.width + 20, Math.random() * canvas.height, 0.2, enemies.length));
+    else if(side == 2) enemies.push(new Enemy(Math.random() * canvas.width, -50, 0.2, enemies.length));
+    else if(side == 3) enemies.push(new Enemy(Math.random() * canvas.width, canvas.height + 20, 0.2, enemies.length));
 }
 
 const explosion = (x, y, radius, maxScale, particleCount) => {
@@ -111,17 +119,17 @@ const getCenterY = (y, img, scale) => { return y + img.height * scale / 2; }
 
 const toRadians = (angle) => { return angle * (Math.PI / 180) }
 
-let xPos = 250;
-let yPos = 250;
+let xPos = canvas.width / 2;
+let yPos = canvas.height / 2;
 let playerSpeed = 0.5;
 let bullets = [];
 let allParticles = [];
 let enemies = [];
 
 const main = () => {
-    for(let x = 0; x < 500; x += 100){
-        for(let y = 0; y < 500; y += 100){
-            ctx.drawImage(background, x, y, 100, 100);
+    for(let x = 0; x < canvas.width; x += 150){
+        for(let y = 0; y < canvas.height; y += 150){
+            ctx.drawImage(background, x, y, 150, 150);
         }
     }
 

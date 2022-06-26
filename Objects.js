@@ -16,7 +16,7 @@ class Bullet {
         this.x += this.speed * Math.cos(this.angle) * hzCoef * timeCoef;
         this.y += this.speed * Math.sin(this.angle) * hzCoef * timeCoef;
 
-        if(this.x < -10 || this.x > 510 || this.y < -10 || this.y > 510){
+        if(this.x < -10 || this.x > canvas.width + 10 || this.y < -10 || this.y > canvas.height + 10){
             this.destroy();
         }
 
