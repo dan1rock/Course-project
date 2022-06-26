@@ -13,8 +13,8 @@ class Bullet {
 
     bulletMain() {
         drawImage(ctx, bullet, this.x, this.y, this.angle, 0.1);
-        this.x += this.speed * Math.cos(this.angle) * hzCoef;
-        this.y += this.speed * Math.sin(this.angle) * hzCoef;
+        this.x += this.speed * Math.cos(this.angle) * hzCoef * timeCoef;
+        this.y += this.speed * Math.sin(this.angle) * hzCoef * timeCoef;
 
         if(this.x < -10 || this.x > 510 || this.y < -10 || this.y > 510){
             this.destroy();
@@ -25,7 +25,7 @@ class Bullet {
             this.timer = 1;
         }
 
-        this.timer -= 0.5 * hzCoef;
+        this.timer -= 0.5 * hzCoef * timeCoef;
     }
 
     destroy() {
@@ -49,11 +49,11 @@ class Particles {
 
     particlesMain() {
         if(this.spawnTimer < 0) drawImage(ctx, this.img, this.x, this.y, 0, this.scale);
-        else this.spawnTimer -= 0.2 * hzCoef;
-        this.scale -= 0.002 * hzCoef;
+        else this.spawnTimer -= 0.2 * hzCoef * timeCoef;
+        this.scale -= 0.002 * hzCoef * timeCoef;
 
-        this.x += this.speed * Math.cos(this.angle) * hzCoef;
-        this.y += this.speed * Math.sin(this.angle) * hzCoef;
+        this.x += this.speed * Math.cos(this.angle) * hzCoef * timeCoef;
+        this.y += this.speed * Math.sin(this.angle) * hzCoef * timeCoef;
         
         if(this.scale <= 0){
             allParticles.splice(this.index, 1);
@@ -75,9 +75,9 @@ class Enemy {
     enemyMain() {
         this.angle = calculateAngle(this.x, this.y, xPos, yPos, false) + toRadians(90);
         drawImage(ctx, player, this.x, this.y, this.angle, 0.4);
-        this.x += this.speed * Math.cos(this.angle) * hzCoef;
-        this.y += this.speed * Math.sin(this.angle) * hzCoef;
-        this.shootDelay -= 0.1 * hzCoef;
+        this.x += this.speed * Math.cos(this.angle) * hzCoef * timeCoef;
+        this.y += this.speed * Math.sin(this.angle) * hzCoef * timeCoef;
+        this.shootDelay -= 0.1 * hzCoef * timeCoef;
 
         if(this.shootDelay <= 0) {
             bullets.push(new Bullet(

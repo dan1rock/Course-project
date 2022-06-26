@@ -41,7 +41,7 @@ function keyDown(event){
         )
     if(event.code == 'KeyQ') {
         playerSpeed *= 5;
-        setTimeout(resetPlayerSpeed, 50);
+        setTimeout(resetPlayerSpeed, 50 / timeCoef * hzCoef);
     }
 }
 
@@ -125,10 +125,18 @@ const main = () => {
         }
     }
 
-    if(key.up == true) yPos -= playerSpeed * hzCoef;
-    if(key.down == true) yPos += playerSpeed * hzCoef;
-    if(key.left == true) xPos -= playerSpeed * hzCoef;
-    if(key.right == true) xPos += playerSpeed * hzCoef;
+    if(key.up) yPos -= playerSpeed * hzCoef * timeCoef;
+    if(key.down) yPos += playerSpeed * hzCoef * timeCoef;
+    if(key.left) xPos -= playerSpeed * hzCoef * timeCoef;
+    if(key.right) xPos += playerSpeed * hzCoef * timeCoef;
+
+    if(key.up || key.down || key.right || key.left) {
+        if(timeCoef < 1) timeCoef += 0.02 * hzCoef * timeCoef;
+    } 
+    else if(timeCoef > 0.2) timeCoef -= 0.02 * hzCoef * timeCoef;
+
+    if(timeCoef > 1) timeCoef = 1;
+    if(timeCoef < 0.2) timeCoef = 0.2;
 
     for(let i = 0; i < allParticles.length; ++i) allParticles[i].particlesMain();
     for(let i = 0; i < bullets.length; ++i) bullets[i].bulletMain();
@@ -139,8 +147,9 @@ const main = () => {
 
 const hz60 = 1000 / 60;
 const hz144 = 1000 / 144;
-let currentHz = hz60;
+let currentHz = hz144;
 let hzCoef = currentHz / 7;
+let timeCoef = 1;
 
 setInterval(main, currentHz);
 setInterval(spawnEnemy, 2000);
