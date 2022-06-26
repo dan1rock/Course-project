@@ -118,11 +118,6 @@ const calculateAngle = (x1, y1, x2, y2, cursor = true) => {
 };
 
 const spawnEnemy = () => {
-  /*const side = Math.floor(Math.random() * 4); 
-    if(side == 0) enemies.push(new Enemy(-50, Math.random() * canvas.height, 0.2, enemies.length));
-    else if(side == 1) enemies.push(new Enemy(canvas.width + 20, Math.random() * canvas.height, 0.2, enemies.length));
-    else if(side == 2) enemies.push(new Enemy(Math.random() * canvas.width, -50, 0.2, enemies.length));
-    else if(side == 3) enemies.push(new Enemy(Math.random() * canvas.width, canvas.height + 20, 0.2, enemies.length));*/
   enemies.push(
     new Enemy(
       Math.random() * canvas.width,
@@ -131,6 +126,8 @@ const spawnEnemy = () => {
       enemies.length
     )
   );
+
+  setTimeout(spawnEnemy, Math.random() * 3000);
 };
 
 const explosion = (x, y, radius, maxScale, particleCount) => {
@@ -214,4 +211,4 @@ let hzCoef = currentHz / 7;
 let timeCoef = 1;
 
 setInterval(main, currentHz);
-setInterval(spawnEnemy, 2000);
+setTimeout(spawnEnemy, 2000);
