@@ -17,6 +17,7 @@ const bullet = new Image();
 const particles = new Image();
 const greyParticles = new Image();
 const spawner = new Image();
+const redParticles = new Image();
 
 background.src = "Textures/Floor.png";
 player.src = "Textures/Character.png";
@@ -24,6 +25,7 @@ bullet.src = "Textures/bullet.png";
 particles.src = "Textures/WhiteParticles.png";
 greyParticles.src = "Textures/GreyParticles.png";
 spawner.src = "Textures/spawner.png";
+redParticles.src = "Textures/RedParticles.png";
 
 const key = {
   up: false,
@@ -131,7 +133,7 @@ const spawnEnemy = () => {
   setTimeout(spawnEnemy, Math.random() * enemyMaxSpawnTimer);
 };
 
-const explosion = (x, y, radius, maxScale, particleCount) => {
+const explosion = (x, y, radius, maxScale, particleCount, particleType = greyParticles) => {
   for (let i = 0; i < particleCount; ++i) {
     const spawnX = x + Math.random() * radius * 2 - radius;
     const spawnY = y + Math.random() * radius * 2 - radius;
@@ -141,7 +143,7 @@ const explosion = (x, y, radius, maxScale, particleCount) => {
         spawnY,
         Math.random() * (maxScale / 2) + maxScale / 2,
         allParticles.length,
-        greyParticles,
+        particleType,
         calculateAngle(x, y, spawnX, spawnY, false) + toRadians(90),
         Math.random() * 0.2,
         0
@@ -176,7 +178,7 @@ const detectCollision = () => {
       ) < 20 &&
       bullets[i].isEnemy
     ) {
-      explosion(centerX, centerY, 10, 0.5, 15);
+      explosion(centerX, centerY, 15, 0.7, 20, redParticles);
       playerIsAlive = false;
     }
   }
