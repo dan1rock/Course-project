@@ -16,12 +16,14 @@ const player = new Image();
 const bullet = new Image();
 const particles = new Image();
 const greyParticles = new Image();
+const spawner = new Image();
 
 background.src = 'Textures/Floor.png';
 player.src = 'Textures/Character.png';
 bullet.src = 'Textures/bullet.png';
 particles.src = 'Textures/WhiteParticles.png';
 greyParticles.src = 'Textures/GreyParticles.png';
+spawner.src = 'Textures/spawner.png'
 
 const key = {
     up: false,
@@ -60,12 +62,14 @@ function keyUp(event){
     if(event.code == 'KeyD') key.right = false;
 }
 
-const drawImage = (ctx, img, x, y, angle = 0, scale = 1) => {
+const drawImage = (ctx, img, x, y, angle = 0, scale = 1, absoluteCenter = false) => {
+    let xCenterShear = absoluteCenter ? img.width * scale / 2 : 0;
+    let yCenterShear = absoluteCenter ? img.height * scale / 2 : 0;
     ctx.save();
-    ctx.translate(x + img.width * scale / 2, y + img.height * scale / 2);
+    ctx.translate(x + img.width * scale / 2 - xCenterShear, y +  img.height * scale / 2 - yCenterShear);
     ctx.rotate(angle);
-    ctx.translate(- x - img.width * scale / 2, - y - img.height * scale / 2);
-    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+    ctx.translate(- x - img.width * scale / 2 + xCenterShear, - y -  img.height * scale / 2 + yCenterShear);
+    ctx.drawImage(img, x - xCenterShear, y - yCenterShear, img.width * scale, img.height * scale);
     ctx.restore();
 }
 
@@ -88,11 +92,12 @@ const calculateAngle = (x1, y1, x2, y2, cursor = true) => {
 }
 
 const spawnEnemy = () => {
-    const side = Math.floor(Math.random() * 4); 
+    /*const side = Math.floor(Math.random() * 4); 
     if(side == 0) enemies.push(new Enemy(-50, Math.random() * canvas.height, 0.2, enemies.length));
     else if(side == 1) enemies.push(new Enemy(canvas.width + 20, Math.random() * canvas.height, 0.2, enemies.length));
     else if(side == 2) enemies.push(new Enemy(Math.random() * canvas.width, -50, 0.2, enemies.length));
-    else if(side == 3) enemies.push(new Enemy(Math.random() * canvas.width, canvas.height + 20, 0.2, enemies.length));
+    else if(side == 3) enemies.push(new Enemy(Math.random() * canvas.width, canvas.height + 20, 0.2, enemies.length));*/
+    enemies.push(new Enemy(Math.random() * canvas.width, Math.random() * canvas.height, 0.2, enemies.length));
 }
 
 const explosion = (x, y, radius, maxScale, particleCount) => {

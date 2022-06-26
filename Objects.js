@@ -70,11 +70,17 @@ class Enemy {
         this.speed = speed;
         this.index = index;
         this.shootDelay = Math.random() * 20 + 10;
+        this.isSpawned = false;
+        this.spawnerAngle = 0;
+        this.scale = 0;
+        this.spawnerScale = 0;
+        this.interval;
     }
 
     enemyMain() {
         this.angle = calculateAngle(this.x, this.y, xPos, yPos, false) + toRadians(90);
-        drawImage(ctx, player, this.x, this.y, this.angle, 0.4);
+
+        if(this.isSpawned){
         this.x += this.speed * Math.cos(this.angle) * hzCoef * timeCoef;
         this.y += this.speed * Math.sin(this.angle) * hzCoef * timeCoef;
         this.shootDelay -= 0.1 * hzCoef * timeCoef;
@@ -88,7 +94,29 @@ class Enemy {
             this.shootDelay = Math.random() * 20 + 10;
         }
 
+        if(this.spawnerScale > 0) this.scaleDownSpawner();
+    } else this.renderSpawner();
+    drawImage(ctx, player, this.x, this.y, this.angle, this.scale);
+
         this.detectCollision();
+    }
+
+    renderSpawner() {
+        drawImage(ctx, spawner, this.x, this.y, this.spawnerAngle, this.spawnerScale, true);
+
+        this.spawnerAngle += 0.1 * hzCoef * timeCoef;
+        if(this.spawnerScale < 0.15) this.spawnerScale += 0.0015 * hzCoef * timeCoef;
+        else this.scale += 0.005 * hzCoef * timeCoef;
+
+        if(this.scale >= 0.4) this.isSpawned = true;
+    }
+
+    scaleDownSpawner() {
+        drawImage(ctx, spawner, this.x, this.y, this.spawnerAngle, this.spawnerScale, true);
+
+        this.spawnerAngle += 0.1 * hzCoef * timeCoef;
+        if(this.spawnerScale > 0) this.spawnerScale -= 0.002 * hzCoef * timeCoef;
+        else clearInterval(this.interval);
     }
 
     detectCollision() {
