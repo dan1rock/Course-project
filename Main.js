@@ -4,7 +4,7 @@ const cvs = document.getElementById("canvas");
 const ctx = cvs.getContext("2d");
 
 cvs.width = window.innerWidth;
-cvs.height = window.innerHeight;
+cvs.height = window.innerHeight - 4;
 
 const canvas = {
   width: cvs.width,
