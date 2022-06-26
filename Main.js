@@ -81,20 +81,10 @@ const calculateAngle = (x1, y1, x2, y2, cursor = true) => {
 
 const spawnEnemy = () => {
     const side = Math.floor(Math.random() * 4); 
-    switch (side){
-        case 0: 
-            enemies.push(new Enemy(-50, Math.random() * 500, 0.2, enemies.length));
-            break;
-        case 1: 
-            enemies.push(new Enemy(520, Math.random() * 500, 0.2, enemies.length));
-            break;
-        case 2: 
-            enemies.push(new Enemy(Math.random() * 500, -50, 0.2, enemies.length));
-            break;
-        case 3: 
-            enemies.push(new Enemy(Math.random() * 500, 520, 0.2, enemies.length));
-            break;
-    } 
+    if(side == 0) enemies.push(new Enemy(-50, Math.random() * 500, 0.2, enemies.length));
+    else if(side == 1) enemies.push(new Enemy(520, Math.random() * 500, 0.2, enemies.length));
+    else if(side == 2) enemies.push(new Enemy(Math.random() * 500, -50, 0.2, enemies.length));
+    else if(side == 3) enemies.push(new Enemy(Math.random() * 500, 520, 0.2, enemies.length));
 }
 
 const explosion = (x, y, radius, maxScale, particleCount) => {
