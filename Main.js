@@ -125,10 +125,10 @@ const main = () => {
         }
     }
 
-    if(key.up == true) yPos -= playerSpeed;
-    if(key.down == true) yPos += playerSpeed;
-    if(key.left == true) xPos -= playerSpeed;
-    if(key.right == true) xPos += playerSpeed;
+    if(key.up == true) yPos -= playerSpeed * hzCoef;
+    if(key.down == true) yPos += playerSpeed * hzCoef;
+    if(key.left == true) xPos -= playerSpeed * hzCoef;
+    if(key.right == true) xPos += playerSpeed * hzCoef;
 
     for(let i = 0; i < allParticles.length; ++i) allParticles[i].particlesMain();
     for(let i = 0; i < bullets.length; ++i) bullets[i].bulletMain();
@@ -137,5 +137,10 @@ const main = () => {
     drawImage(ctx, player, xPos, yPos, calculateAngle(xPos, yPos, mousePos.X, mousePos.Y) + toRadians(90), 0.4);
 }
 
-setInterval(main, 7);
+const hz60 = 1000 / 60;
+const hz144 = 1000 / 144;
+let currentHz = hz60;
+let hzCoef = currentHz / 7;
+
+setInterval(main, currentHz);
 setInterval(spawnEnemy, 2000);
