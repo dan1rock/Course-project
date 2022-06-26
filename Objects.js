@@ -102,25 +102,27 @@ class Enemy {
       calculateAngle(this.x, this.y, xPos, yPos, false) + toRadians(90);
 
     if (this.isSpawned) {
-      this.x += this.speed * Math.cos(this.angle) * hzCoef * timeCoef;
-      this.y += this.speed * Math.sin(this.angle) * hzCoef * timeCoef;
-      this.shootDelay -= 0.1 * hzCoef * timeCoef;
+      if (playerIsAlive) {
+        this.x += this.speed * Math.cos(this.angle) * hzCoef * timeCoef;
+        this.y += this.speed * Math.sin(this.angle) * hzCoef * timeCoef;
+        this.shootDelay -= 0.1 * hzCoef * timeCoef;
 
-      if (this.shootDelay <= 0) {
-        bullets.push(
-          new Bullet(
-            this.angle,
-            getCenterX(this.x, player, 0.4),
-            getCenterY(this.y, player, 0.4),
-            1,
-            bullets.length,
-            true
-          )
-        );
-        this.shootDelay = Math.random() * 20 + 10;
+        if (this.shootDelay <= 0) {
+          bullets.push(
+            new Bullet(
+              this.angle,
+              getCenterX(this.x, player, 0.4),
+              getCenterY(this.y, player, 0.4),
+              1,
+              bullets.length,
+              true
+            )
+          );
+          this.shootDelay = Math.random() * 20 + 10;
+        }
+
+        if (this.spawnerScale > 0) this.scaleDownSpawner();
       }
-
-      if (this.spawnerScale > 0) this.scaleDownSpawner();
     } else this.renderSpawner();
     drawImage(ctx, player, this.x, this.y, this.angle, this.scale);
 
@@ -178,7 +180,7 @@ class Enemy {
         objectDestroyed(this.index, enemies);
         bullets[i].destroy();
 
-        if(enemyMaxSpawnTimer > 500) enemyMaxSpawnTimer -= 20;
+        if (enemyMaxSpawnTimer > 500) enemyMaxSpawnTimer -= 20;
       }
     }
   }

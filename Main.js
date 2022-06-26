@@ -118,14 +118,15 @@ const calculateAngle = (x1, y1, x2, y2, cursor = true) => {
 };
 
 const spawnEnemy = () => {
-  enemies.push(
-    new Enemy(
-      Math.random() * canvas.width,
-      Math.random() * canvas.height,
-      0.2,
-      enemies.length
-    )
-  );
+  if (enemies.length < 20)
+    enemies.push(
+      new Enemy(
+        Math.random() * canvas.width,
+        Math.random() * canvas.height,
+        0.2,
+        enemies.length
+      )
+    );
 
   setTimeout(spawnEnemy, Math.random() * enemyMaxSpawnTimer);
 };
@@ -206,7 +207,7 @@ const main = () => {
     if (timeCoef < 1) timeCoef += 0.02 * hzCoef * timeCoef;
   } else if (timeCoef > 0.2) timeCoef -= 0.02 * hzCoef * timeCoef;
 
-  if (timeCoef > 1) timeCoef = 1;
+  if (timeCoef > 1 || ! playerIsAlive) timeCoef = 1;
   if (timeCoef < 0.2) timeCoef = 0.2;
 
   for (let i = 0; i < allParticles.length; ++i) allParticles[i].particlesMain();
