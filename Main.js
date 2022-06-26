@@ -164,9 +164,27 @@ const toRadians = (angle) => {
   return angle * (Math.PI / 180);
 };
 
+const detectCollision = () => {
+  for (let i = 0; i < bullets.length; ++i) {
+    const centerX = getCenterX(xPos, player, 0.4);
+    const centerY = getCenterY(yPos, player, 0.4);
+    if (
+      Math.sqrt(
+        Math.pow(bullets[i].x - centerX, 2) +
+          Math.pow(bullets[i].y - centerY, 2)
+      ) < 20 &&
+      bullets[i].isEnemy
+    ) {
+      explosion(centerX, centerY, 10, 0.5, 15);
+      playerIsAlive = false;
+    }
+  }
+};
+
 let xPos = canvas.width / 2;
 let yPos = canvas.height / 2;
 let playerSpeed = 0.5;
+let playerIsAlive = true;
 let bullets = [];
 let allParticles = [];
 let enemies = [];
@@ -194,14 +212,17 @@ const main = () => {
   for (let i = 0; i < bullets.length; ++i) bullets[i].bulletMain();
   for (let i = 0; i < enemies.length; ++i) enemies[i].enemyMain();
 
-  drawImage(
-    ctx,
-    player,
-    xPos,
-    yPos,
-    calculateAngle(xPos, yPos, mousePos.X, mousePos.Y) + toRadians(90),
-    0.4
-  );
+  if (playerIsAlive) {
+    drawImage(
+      ctx,
+      player,
+      xPos,
+      yPos,
+      calculateAngle(xPos, yPos, mousePos.X, mousePos.Y) + toRadians(90),
+      0.4
+    );
+    detectCollision();
+  }
 };
 
 const hz60 = 1000 / 60;
