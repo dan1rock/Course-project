@@ -127,7 +127,7 @@ const spawnEnemy = () => {
     )
   );
 
-  setTimeout(spawnEnemy, Math.random() * 3000);
+  setTimeout(spawnEnemy, Math.random() * enemyMaxSpawnTimer);
 };
 
 const explosion = (x, y, radius, maxScale, particleCount) => {
@@ -188,6 +188,7 @@ let playerIsAlive = true;
 let bullets = [];
 let allParticles = [];
 let enemies = [];
+let enemyMaxSpawnTimer = 3000;
 
 const main = () => {
   for (let x = 0; x < canvas.width; x += 150) {

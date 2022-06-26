@@ -177,6 +177,8 @@ class Enemy {
         enemies.splice(this.index, 1);
         objectDestroyed(this.index, enemies);
         bullets[i].destroy();
+
+        if(enemyMaxSpawnTimer > 500) enemyMaxSpawnTimer -= 20;
       }
     }
   }
