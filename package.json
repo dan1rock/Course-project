@@ -1,0 +1,18 @@
+{
+  "name": "topdownshooter",
+  "version": "1.0.0",
+  "description": "Browser game written from scratch by Daniil Holets, KPI student from group IM-12",
+  "main": "Main.js",
+  "scripts": {
+    "test": "npm run -s lint",
+    "lint": "eslint . --fix && prettier --write \"**/*.js\" \"**/*.json\""
+  },
+  "author": "Daniil Holets",
+  "license": "MIT",
+  "dependencies": {
+    "prettier": "^2.7.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.18.0"
+  }
+}

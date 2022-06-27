@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const cvs = document.getElementById("canvas");
-const ctx = cvs.getContext("2d");
+const cvs = document.getElementById('canvas');
+const ctx = cvs.getContext('2d');
 
 cvs.width = window.innerWidth;
 cvs.height = window.innerHeight - 4;
@@ -19,13 +19,31 @@ const greyParticles = new Image();
 const spawner = new Image();
 const redParticles = new Image();
 
-background.src = "Textures/Floor.png";
-player.src = "Textures/Character.png";
-bullet.src = "Textures/bullet.png";
-particles.src = "Textures/WhiteParticles.png";
-greyParticles.src = "Textures/GreyParticles.png";
-spawner.src = "Textures/spawner.png";
-redParticles.src = "Textures/RedParticles.png";
+const frequency = {
+  hz60: 1000 / 60,
+  hz144: 1000 / 144,
+};
+
+const currentHz = frequency.hz60;
+const hzCoef = currentHz / 7;
+let timeCoef = 1;
+
+let xPos = canvas.width / 2;
+let yPos = canvas.height / 2;
+let playerSpeed = 0.5;
+let playerIsAlive = true;
+const bullets = [];
+const allParticles = [];
+const enemies = [];
+const enemyMaxSpawnTimer = 3000;
+
+background.src = 'Textures/Floor.png';
+player.src = 'Textures/Character.png';
+bullet.src = 'Textures/bullet.png';
+particles.src = 'Textures/WhiteParticles.png';
+greyParticles.src = 'Textures/GreyParticles.png';
+spawner.src = 'Textures/spawner.png';
+redParticles.src = 'Textures/RedParticles.png';
 
 const key = {
   up: false,
@@ -39,26 +57,57 @@ const mousePos = {
   Y: -1,
 };
 
-document.addEventListener("keydown", keyDown);
-document.addEventListener("keyup", keyUp);
+const getCenterX = (x, img, scale) => x + (img.width * scale) / 2;
+const getCenterY = (y, img, scale) => y + (img.height * scale) / 2;
+
+const toRadians = (angle) => angle * (Math.PI / 180);
+
+const calculateAngle = (x1, y1, x2, y2, cursor = true) => {
+  const centerX1 = getCenterX(x1, player, 0.4);
+  const centerY1 = getCenterY(y1, player, 0.4);
+  const centerX2 = cursor ? x2 : getCenterX(x2, player, 0.4);
+  const centerY2 = cursor ? y2 : getCenterY(y2, player, 0.4);
+  const pi = centerY1 - centerY2 >= 0 ? Math.PI : 0;
+  return -Math.atan((centerX1 - centerX2) / (centerY1 - centerY2)) + pi;
+};
+
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
+
+const shoot = () => {
+  if (playerIsAlive)
+    bullets.push(
+      new Bullet(
+        calculateAngle(xPos, yPos, mousePos.X, mousePos.Y) + toRadians(90),
+        getCenterX(xPos, player, 0.4),
+        getCenterY(yPos, player, 0.4),
+        2,
+        bullets.length
+      )
+    );
+};
+
+const resetPlayerSpeed = () => {
+  playerSpeed = 0.5;
+};
 
 function keyDown(event) {
-  if (event.code == "KeyW") key.up = true;
-  if (event.code == "KeyS") key.down = true;
-  if (event.code == "KeyA") key.left = true;
-  if (event.code == "KeyD") key.right = true;
-  if (event.code == "KeyE") shoot();
-  if (event.code == "KeyQ") {
+  if (event.code === 'KeyW') key.up = true;
+  if (event.code === 'KeyS') key.down = true;
+  if (event.code === 'KeyA') key.left = true;
+  if (event.code === 'KeyD') key.right = true;
+  if (event.code === 'KeyE') shoot();
+  if (event.code === 'KeyQ') {
     playerSpeed *= 5;
-    setTimeout(resetPlayerSpeed, (50 / timeCoef) * hzCoef);
+    setTimeout(resetPlayerSpeed, 50 / timeCoef / hzCoef);
   }
 }
 
 function keyUp(event) {
-  if (event.code == "KeyW") key.up = false;
-  if (event.code == "KeyS") key.down = false;
-  if (event.code == "KeyA") key.left = false;
-  if (event.code == "KeyD") key.right = false;
+  if (event.code === 'KeyW') key.up = false;
+  if (event.code === 'KeyS') key.down = false;
+  if (event.code === 'KeyA') key.left = false;
+  if (event.code === 'KeyD') key.right = false;
 }
 
 const drawImage = (
@@ -70,8 +119,8 @@ const drawImage = (
   scale = 1,
   absoluteCenter = false
 ) => {
-  let xCenterShear = absoluteCenter ? (img.width * scale) / 2 : 0;
-  let yCenterShear = absoluteCenter ? (img.height * scale) / 2 : 0;
+  const xCenterShear = absoluteCenter ? (img.width * scale) / 2 : 0;
+  const yCenterShear = absoluteCenter ? (img.height * scale) / 2 : 0;
   ctx.save();
   ctx.translate(
     x + (img.width * scale) / 2 - xCenterShear,
@@ -92,22 +141,13 @@ const drawImage = (
   ctx.restore();
 };
 
-document.onmousemove = function (event) {
+document.onmousemove = function(event) {
   mousePos.X = event.pageX;
   mousePos.Y = event.pageY;
 };
 
 const objectDestroyed = (index, objectArray) => {
   for (let i = index; i < objectArray.length; ++i) objectArray[i].index -= 1;
-};
-
-const calculateAngle = (x1, y1, x2, y2, cursor = true) => {
-  const centerX1 = getCenterX(x1, player, 0.4);
-  const centerY1 = getCenterY(y1, player, 0.4);
-  const centerX2 = cursor ? x2 : getCenterX(x2, player, 0.4);
-  const centerY2 = cursor ? y2 : getCenterY(y2, player, 0.4);
-  const pi = centerY1 - centerY2 >= 0 ? Math.PI : 0;
-  return -Math.atan((centerX1 - centerX2) / (centerY1 - centerY2)) + pi;
 };
 
 const spawnEnemy = () => {
@@ -150,34 +190,6 @@ const explosion = (
   }
 };
 
-const shoot = () => {
-  if (playerIsAlive)
-    bullets.push(
-      new Bullet(
-        calculateAngle(xPos, yPos, mousePos.X, mousePos.Y) + toRadians(90),
-        getCenterX(xPos, player, 0.4),
-        getCenterY(yPos, player, 0.4),
-        2,
-        bullets.length
-      )
-    );
-};
-
-const resetPlayerSpeed = () => {
-  playerSpeed = 0.5;
-};
-
-const getCenterX = (x, img, scale) => {
-  return x + (img.width * scale) / 2;
-};
-const getCenterY = (y, img, scale) => {
-  return y + (img.height * scale) / 2;
-};
-
-const toRadians = (angle) => {
-  return angle * (Math.PI / 180);
-};
-
 const detectCollision = () => {
   for (let i = 0; i < bullets.length; ++i) {
     const centerX = getCenterX(xPos, player, 0.4);
@@ -194,15 +206,6 @@ const detectCollision = () => {
     }
   }
 };
-
-let xPos = canvas.width / 2;
-let yPos = canvas.height / 2;
-let playerSpeed = 0.5;
-let playerIsAlive = true;
-let bullets = [];
-let allParticles = [];
-let enemies = [];
-let enemyMaxSpawnTimer = 3000;
 
 const main = () => {
   for (let x = 0; x < canvas.width; x += 150) {
@@ -243,12 +246,6 @@ const main = () => {
     detectCollision();
   }
 };
-
-const hz60 = 1000 / 60;
-const hz144 = 1000 / 144;
-let currentHz = hz144;
-let hzCoef = currentHz / 7;
-let timeCoef = 1;
 
 setInterval(main, currentHz);
 setTimeout(spawnEnemy, 2000);

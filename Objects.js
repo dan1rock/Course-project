@@ -1,4 +1,32 @@
-"use strict";
+'use strict';
+
+class Particles {
+  constructor(x, y, scale, index, img, angle = 0, speed = 0, spawnTimer = 0.8) {
+    this.scale = scale;
+    this.x = x;
+    this.y = y;
+    this.spawnTimer = spawnTimer;
+    this.index = index;
+    this.img = img;
+    this.speed = speed;
+    this.angle = angle;
+  }
+
+  particlesMain() {
+    if (this.spawnTimer < 0)
+      drawImage(ctx, this.img, this.x, this.y, 0, this.scale);
+    else this.spawnTimer -= 0.2 * hzCoef * timeCoef;
+    this.scale -= 0.002 * hzCoef * timeCoef;
+
+    this.x += this.speed * Math.cos(this.angle) * hzCoef * timeCoef;
+    this.y += this.speed * Math.sin(this.angle) * hzCoef * timeCoef;
+
+    if (this.scale <= 0) {
+      allParticles.splice(this.index, 1);
+      objectDestroyed(this.index, allParticles);
+    }
+  }
+}
 
 class Bullet {
   constructor(angle, x, y, speed, index, isEnemy = false) {
@@ -51,34 +79,6 @@ class Bullet {
     );
     bullets.splice(this.index, 1);
     objectDestroyed(this.index, bullets);
-  }
-}
-
-class Particles {
-  constructor(x, y, scale, index, img, angle = 0, speed = 0, spawnTimer = 0.8) {
-    this.scale = scale;
-    this.x = x;
-    this.y = y;
-    this.spawnTimer = spawnTimer;
-    this.index = index;
-    this.img = img;
-    this.speed = speed;
-    this.angle = angle;
-  }
-
-  particlesMain() {
-    if (this.spawnTimer < 0)
-      drawImage(ctx, this.img, this.x, this.y, 0, this.scale);
-    else this.spawnTimer -= 0.2 * hzCoef * timeCoef;
-    this.scale -= 0.002 * hzCoef * timeCoef;
-
-    this.x += this.speed * Math.cos(this.angle) * hzCoef * timeCoef;
-    this.y += this.speed * Math.sin(this.angle) * hzCoef * timeCoef;
-
-    if (this.scale <= 0) {
-      allParticles.splice(this.index, 1);
-      objectDestroyed(this.index, allParticles);
-    }
   }
 }
 
