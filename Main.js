@@ -47,16 +47,7 @@ function keyDown(event) {
   if (event.code == "KeyS") key.down = true;
   if (event.code == "KeyA") key.left = true;
   if (event.code == "KeyD") key.right = true;
-  if (event.code == "KeyE")
-    bullets.push(
-      new Bullet(
-        calculateAngle(xPos, yPos, mousePos.X, mousePos.Y) + toRadians(90),
-        getCenterX(xPos, player, 0.4),
-        getCenterY(yPos, player, 0.4),
-        2,
-        bullets.length
-      )
-    );
+  if (event.code == "KeyE") shoot();
   if (event.code == "KeyQ") {
     playerSpeed *= 5;
     setTimeout(resetPlayerSpeed, (50 / timeCoef) * hzCoef);
@@ -133,7 +124,14 @@ const spawnEnemy = () => {
   setTimeout(spawnEnemy, Math.random() * enemyMaxSpawnTimer);
 };
 
-const explosion = (x, y, radius, maxScale, particleCount, particleType = greyParticles) => {
+const explosion = (
+  x,
+  y,
+  radius,
+  maxScale,
+  particleCount,
+  particleType = greyParticles
+) => {
   for (let i = 0; i < particleCount; ++i) {
     const spawnX = x + Math.random() * radius * 2 - radius;
     const spawnY = y + Math.random() * radius * 2 - radius;
@@ -150,6 +148,19 @@ const explosion = (x, y, radius, maxScale, particleCount, particleType = greyPar
       )
     );
   }
+};
+
+const shoot = () => {
+  if (playerIsAlive)
+    bullets.push(
+      new Bullet(
+        calculateAngle(xPos, yPos, mousePos.X, mousePos.Y) + toRadians(90),
+        getCenterX(xPos, player, 0.4),
+        getCenterY(yPos, player, 0.4),
+        2,
+        bullets.length
+      )
+    );
 };
 
 const resetPlayerSpeed = () => {
@@ -200,16 +211,20 @@ const main = () => {
     }
   }
 
-  if (key.up) yPos -= playerSpeed * hzCoef * timeCoef;
-  if (key.down) yPos += playerSpeed * hzCoef * timeCoef;
-  if (key.left) xPos -= playerSpeed * hzCoef * timeCoef;
-  if (key.right) xPos += playerSpeed * hzCoef * timeCoef;
+  if (playerIsAlive) {
+    if (key.up && yPos > 0) yPos -= playerSpeed * hzCoef * timeCoef;
+    if (key.down && yPos < canvas.height - 40)
+      yPos += playerSpeed * hzCoef * timeCoef;
+    if (key.left && xPos > 0) xPos -= playerSpeed * hzCoef * timeCoef;
+    if (key.right && xPos < canvas.width - 40)
+      xPos += playerSpeed * hzCoef * timeCoef;
+  }
 
   if (key.up || key.down || key.right || key.left) {
     if (timeCoef < 1) timeCoef += 0.02 * hzCoef * timeCoef;
   } else if (timeCoef > 0.2) timeCoef -= 0.02 * hzCoef * timeCoef;
 
-  if (timeCoef > 1 || ! playerIsAlive) timeCoef = 1;
+  if (timeCoef > 1 || !playerIsAlive) timeCoef = 1;
   if (timeCoef < 0.2) timeCoef = 0.2;
 
   for (let i = 0; i < allParticles.length; ++i) allParticles[i].particlesMain();

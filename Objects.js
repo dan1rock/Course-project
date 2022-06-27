@@ -120,9 +120,9 @@ class Enemy {
           );
           this.shootDelay = Math.random() * 20 + 10;
         }
-
-        if (this.spawnerScale > 0) this.scaleDownSpawner();
       }
+
+      if (this.spawnerScale > 0) this.scaleDownSpawner();
     } else this.renderSpawner();
     drawImage(ctx, player, this.x, this.y, this.angle, this.scale);
 
