@@ -35,7 +35,7 @@ let playerIsAlive = true;
 const bullets = [];
 const allParticles = [];
 const enemies = [];
-const enemyMaxSpawnTimer = 3000;
+let enemyMaxSpawnTimer = 3000;
 
 background.src = 'Textures/Floor.png';
 player.src = 'Textures/Character.png';
