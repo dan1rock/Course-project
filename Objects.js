@@ -160,8 +160,7 @@ class Enemy {
     );
 
     this.spawnerAngle += 0.1 * hzCoef * timeCoef;
-    if (this.spawnerScale > 0) this.spawnerScale -= 0.002 * hzCoef * timeCoef;
-    else clearInterval(this.interval);
+    this.spawnerScale -= 0.002 * hzCoef * timeCoef;
   }
 
   detectCollision() {
