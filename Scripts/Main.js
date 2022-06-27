@@ -99,7 +99,7 @@ function keyDown(event) {
   if (event.code === 'KeyE') shoot();
   if (event.code === 'KeyQ') {
     playerSpeed *= 5;
-    setTimeout(resetPlayerSpeed, 50 / timeCoef / hzCoef);
+    setTimeout(resetPlayerSpeed, 50 / timeCoef);
   }
 }
 
